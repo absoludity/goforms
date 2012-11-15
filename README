@@ -1,0 +1,26 @@
+The goforms library is a proof-of-concept for a data validation, cleaning and
+error collecting library for golang, in similar style to Django's django.forms
+library.
+
+While thinking about writing web application in go, I wanted to be able to
+encapsulate the data validation and cleaning for http request handlers, so
+that the handler itself could be thin:
+
+{{{
+func my_post_handler(w http.ResponseWriter, r *http.Request){
+    myForm := MyCustomForm()
+    myForm.SetFormData(r.Form)
+
+    if myForm.IsValid(){
+        // Do something with myForm.CleanedData, which is the request's form
+        // data after being cleaned to the correct types etc.
+    } else {
+        // Re-render a template, passing in egForm.Errors which is a map
+        // of errors for each field on the form.
+    }
+}}}
+
+As there didn't seem to be anything similar available for golang, I created
+goforms as a proof-of-concept (see http://goo.gl/pFh6I for golang-nuts post).
+
+Try `gorun example.go` to see a real example in action.
