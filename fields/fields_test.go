@@ -2,8 +2,11 @@ package fields
 
 import (
 	. "launchpad.net/gocheck"
+	"testing"
 )
 
+// Hooks up gocheck into the gotest runner.
+func Test(t *testing.T) { TestingT(t) }
 type CharFieldTestSuite struct{}
 
 var _ = Suite(&CharFieldTestSuite{})
