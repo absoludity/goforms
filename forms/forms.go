@@ -3,12 +3,12 @@
 package forms
 
 import (
-    "goforms/forms/fields"
+    "goforms/fields"
 )
 
 type Form struct {
 	Errors      map[string]string
-	Fields      map[string]Field
+	Fields      map[string]fields.Field
 	CleanedData map[string]interface{}
 }
 
@@ -27,7 +27,7 @@ func (f *Form) IsValid() bool {
 		if err == nil {
 			cleanedData[fieldName] = field.CleanedValue()
 		} else {
-			errors[fieldName] = err.String()
+			errors[fieldName] = err.Error()
 			isValid = false
 		}
 	}
@@ -51,11 +51,11 @@ func (f *Form) SetFormData(data FormData) {
 	}
 }
 
-func NewForm(fields ...Field) *Form {
+func NewForm(formFields ...fields.Field) *Form {
 	form := Form{}
-	form.Fields = make(map[string]Field)
-	for i := 0; i < len(fields); i++ {
-		form.Fields[fields[i].Name()] = fields[i]
-	}
+	form.Fields = make(map[string]fields.Field)
+    for _, field := range formFields {
+        form.Fields[field.Name()] = field
+    }
 	return &form
 }

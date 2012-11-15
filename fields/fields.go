@@ -17,7 +17,6 @@ type Field interface {
 	CleanedValue() interface{}
 }
 
-// Can this just be a Stringer?
 type ValidationError interface {
 	Error() string
 }

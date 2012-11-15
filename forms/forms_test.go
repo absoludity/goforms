@@ -1,8 +1,8 @@
-package forms_test
+package forms
 
 import (
-	"launchpad.net/gocheck"
-	"forms"
+	"goforms/fields"
+	. "launchpad.net/gocheck"
 	"testing"
 )
 
@@ -10,19 +10,19 @@ import (
 func Test(t *testing.T) { TestingT(t) }
 
 type FormTestSuite struct {
-	egForm *forms.Form
+	egForm *Form
 }
 
 var _ = Suite(&FormTestSuite{})
 
 // MakeForm is a helper method to make a form with optional form data.
-func (s *FormTestSuite) MakeForm(data forms.FormData) *forms.Form {
-	descriptionField := forms.NewCharField("description")
+func (s *FormTestSuite) MakeForm(data FormData) *Form {
+	descriptionField := fields.NewCharField("description")
 	descriptionField.MaxLength = 10
-	egForm := forms.NewForm(
+	egForm := NewForm(
 		descriptionField,
-		forms.NewIntegerField("purchase_count"),
-		forms.NewCharField("notused"))
+		fields.NewIntegerField("purchase_count"),
+		fields.NewCharField("notused"))
 	if data != nil {
 		egForm.SetFormData(data)
 	}
@@ -30,7 +30,7 @@ func (s *FormTestSuite) MakeForm(data forms.FormData) *forms.Form {
 }
 
 func (s *FormTestSuite) TestSetFormData(c *C) {
-	var formData = forms.FormData{
+	var formData = FormData{
 		"description":    []string{"short desc"},
 		"purchase_count": []string{"24"},
 		"ignored":        []string{"ignore me"},
@@ -43,7 +43,7 @@ func (s *FormTestSuite) TestSetFormData(c *C) {
 }
 
 func (s *FormTestSuite) TestIsValidTrue(c *C) {
-	var formData = forms.FormData{
+	var formData = FormData{
 		"description":    []string{"short desc"},
 		"purchase_count": []string{"24"},
 		"ignored":        []string{"ignore me"},
@@ -51,7 +51,7 @@ func (s *FormTestSuite) TestIsValidTrue(c *C) {
 	myForm := s.MakeForm(formData)
 
 	c.Check(myForm.IsValid(), Equals, true)
-	c.Check(myForm.CleanedData, Equals, map[string]interface{}{
+	c.Check(myForm.CleanedData, DeepEquals, map[string]interface{}{
 		"description":    "short desc",
 		"purchase_count": 24,
 		"notused":        "",
@@ -59,14 +59,14 @@ func (s *FormTestSuite) TestIsValidTrue(c *C) {
 }
 
 func (s *FormTestSuite) TestIsValidFalse(c *C) {
-	var formData = forms.FormData{
+	var formData = FormData{
 		"description":    []string{"this is too long"},
 		"purchase_count": []string{"2a4"},
 	}
 	myForm := s.MakeForm(formData)
 
 	c.Check(myForm.IsValid(), Equals, false)
-	c.Check(myForm.Errors, Equals, map[string]string{
+	c.Check(myForm.Errors, DeepEquals, map[string]string{
 		"purchase_count": "The value must be a valid integer.",
 		"description": "The value must have a maximum length of " +
 		               "10 characters.",
