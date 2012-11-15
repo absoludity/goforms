@@ -1,8 +1,7 @@
-package forms_test
+package fields
 
 import (
 	. "launchpad.net/gocheck"
-	"launchpad.net/goforms"
 )
 
 type CharFieldTestSuite struct{}
@@ -10,7 +9,7 @@ type CharFieldTestSuite struct{}
 var _ = Suite(&CharFieldTestSuite{})
 
 func (s *CharFieldTestSuite) TestCleanSuccess(c *C) {
-	f := forms.NewCharField("description")
+	f := NewCharField("description")
 	f.SetValue("Testing 1, 2, 3")
 
 	c.Check(f.Clean(), Equals, nil)
@@ -18,24 +17,24 @@ func (s *CharFieldTestSuite) TestCleanSuccess(c *C) {
 }
 
 func (s *CharFieldTestSuite) TestMinLength(c *C) {
-	f := forms.NewCharField("description")
+	f := NewCharField("description")
 	f.MinLength = 20
 	f.SetValue("Testing 1, 2, 3")
 
 	err := f.Clean()
 
-	c.Check(err.String(), Equals,
+	c.Check(err.Error(), Equals,
 		"The value must have a minimum length of 20 characters.")
 }
 
 func (s *CharFieldTestSuite) TestMaxLength(c *C) {
-	f := forms.NewCharField("description")
+	f := NewCharField("description")
 	f.MaxLength = 10
 	f.SetValue("Testing 1, 2, 3")
 
 	err := f.Clean()
 
-	c.Check(err.String(), Equals,
+	c.Check(err.Error(), Equals,
 		"The value must have a maximum length of 10 characters.")
 }
 
@@ -44,7 +43,7 @@ type IntegerFieldTestSuite struct{}
 var _ = Suite(&IntegerFieldTestSuite{})
 
 func (s *IntegerFieldTestSuite) TestCleanSuccess(c *C) {
-	f := forms.NewIntegerField("num_purchases")
+	f := NewIntegerField("num_purchases")
 	f.SetValue("12345")
 
 	c.Check(f.Clean(), Equals, nil)
@@ -52,11 +51,11 @@ func (s *IntegerFieldTestSuite) TestCleanSuccess(c *C) {
 }
 
 func (s *IntegerFieldTestSuite) TestCleanInvalid(c *C) {
-	f := forms.NewIntegerField("num_purchases")
+	f := NewIntegerField("num_purchases")
 	f.SetValue("a12345")
 
 	err := f.Clean()
-	c.Check(err.String(), Equals, "The value must be a valid integer.")
+	c.Check(err.Error(), Equals, "The value must be a valid integer.")
 }
 
 type RegexFieldTestSuite struct{}
@@ -64,7 +63,7 @@ type RegexFieldTestSuite struct{}
 var _ = Suite(&RegexFieldTestSuite{})
 
 func (s *RegexFieldTestSuite) TestCleanSuccess(c *C) {
-	f := forms.NewRegexField("alphabet", "a.c")
+	f := NewRegexField("alphabet", "a.c")
 	f.SetValue("abc")
 
 	c.Check(f.Clean(), Equals, nil)
@@ -72,10 +71,10 @@ func (s *RegexFieldTestSuite) TestCleanSuccess(c *C) {
 }
 
 func (s *RegexFieldTestSuite) TestCleanInvalid(c *C) {
-	f := forms.NewRegexField("alphabet", "a.c")
+	f := NewRegexField("alphabet", "a.c")
 	f.SetValue("abz")
 
 	err := f.Clean()
-	c.Check(err.String(), Equals, "The input 'abz' did not match 'a.c'.")
+	c.Check(err.Error(), Equals, "The input 'abz' did not match 'a.c'.")
 	c.Check(f.CleanedValue(), IsNil)
 }

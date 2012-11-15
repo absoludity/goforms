@@ -1,8 +1,8 @@
 package forms_test
 
 import (
-	. "launchpad.net/gocheck"
-	"launchpad.net/goforms"
+	"launchpad.net/gocheck"
+	"forms"
 	"testing"
 )
 

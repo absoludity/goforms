@@ -2,13 +2,9 @@
 // error collection.
 package forms
 
-type Field interface {
-	Name() string
-	SetValue(string)
-	Value() string
-	Clean() ValidationError
-	CleanedValue() interface{}
-}
+import (
+    "goforms/forms/fields"
+)
 
 type Form struct {
 	Errors      map[string]string

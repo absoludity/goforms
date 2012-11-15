@@ -1,16 +1,25 @@
 // Package fields implements form fields for validating and cleaning
 // data from http requests.
-package forms
+package fields
 
 import (
 	"fmt"
-	"os"
+	"errors"
 	"regexp"
 	"strconv"
 )
 
+type Field interface {
+	Name() string
+	SetValue(string)
+	Value() string
+	Clean() ValidationError
+	CleanedValue() interface{}
+}
+
+// Can this just be a Stringer?
 type ValidationError interface {
-	String() string
+	Error() string
 }
 
 // BaseField contains items common to all form fields.
@@ -46,12 +55,12 @@ func (f *CharField) Clean() (error ValidationError) {
 	// Ensure value is between max and min length,
 	// Might be worth a Cleanable interface?
 	if f.MaxLength != 0 && len(f.value) > f.MaxLength {
-		return os.NewError(fmt.Sprint(
+		return errors.New(fmt.Sprint(
 			"The value must have a maximum length of ",
 			f.MaxLength, " characters."))
 	}
 	if len(f.value) < f.MinLength {
-		return os.NewError(fmt.Sprint(
+		return errors.New(fmt.Sprint(
 			"The value must have a minimum length of ",
 			f.MinLength, " characters."))
 	}
@@ -81,7 +90,7 @@ func NewIntegerField(name string) *IntegerField {
 func (f *IntegerField) Clean() (error ValidationError) {
 	f.cleaned_value, error = strconv.Atoi(f.value)
 	if error != nil {
-		return os.NewError(
+		return errors.New(
 			"The value must be a valid integer.")
 	}
 	return nil
@@ -101,11 +110,11 @@ func NewRegexField(name string, matchString string) *RegexField {
 func (f *RegexField) Clean() (error ValidationError) {
 	matches, err := regexp.MatchString("^"+f.MatchString+"$", f.value)
 	if err != nil {
-		return os.NewError(
+		return errors.New(
 			"The regexp could not be compiled.")
 	}
 	if !matches {
-		return os.NewError(fmt.Sprint(
+		return errors.New(fmt.Sprint(
 			"The input '", f.value, "' did not match '",
 			f.MatchString, "'."))
 	}
