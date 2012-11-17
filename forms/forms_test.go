@@ -69,6 +69,6 @@ func (s *FormTestSuite) TestIsValidFalse(c *C) {
 	c.Check(myForm.Errors, DeepEquals, map[string]string{
 		"purchase_count": "The value must be a valid integer.",
 		"description": "The value must have a maximum length of " +
-		               "10 characters.",
-		})
+			"10 characters.",
+	})
 }

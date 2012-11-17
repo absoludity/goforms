@@ -3,8 +3,8 @@
 package fields
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 )
@@ -13,7 +13,7 @@ type Field interface {
 	Name() string
 	SetValue(string)
 	Value() string
-	Clean() ValidationError
+	Clean() (interface{}, ValidationError)
 	CleanedValue() interface{}
 }
 
@@ -50,22 +50,22 @@ type CharField struct {
 
 // Clean verifies the validity of the given value and prepares the cleaned
 // value, returning an error for invalid data.
-func (f *CharField) Clean() (error ValidationError) {
+func (f *CharField) Clean() (interface{}, ValidationError) {
 	// Ensure value is between max and min length,
 	// Might be worth a Cleanable interface?
 	if f.MaxLength != 0 && len(f.value) > f.MaxLength {
-		return errors.New(fmt.Sprint(
+		return nil, errors.New(fmt.Sprint(
 			"The value must have a maximum length of ",
 			f.MaxLength, " characters."))
 	}
 	if len(f.value) < f.MinLength {
-		return errors.New(fmt.Sprint(
+		return nil, errors.New(fmt.Sprint(
 			"The value must have a minimum length of ",
 			f.MinLength, " characters."))
 	}
 
 	f.cleaned_value = f.value
-	return nil
+	return f.cleaned_value, nil
 }
 
 func NewCharField(name string) *CharField {
@@ -86,13 +86,14 @@ func NewIntegerField(name string) *IntegerField {
 
 // Clean verifies the validity of the given value and prepares the cleaned
 // value, returning an error for invalid data.
-func (f *IntegerField) Clean() (error ValidationError) {
-	f.cleaned_value, error = strconv.Atoi(f.value)
+func (f *IntegerField) Clean() (interface{}, ValidationError) {
+	cleaned_value, error := strconv.Atoi(f.value)
 	if error != nil {
-		return errors.New(
+		return nil, errors.New(
 			"The value must be a valid integer.")
 	}
-	return nil
+	f.cleaned_value = cleaned_value
+	return f.cleaned_value, nil
 }
 
 type RegexField struct {
@@ -106,17 +107,17 @@ func NewRegexField(name string, matchString string) *RegexField {
 	return &field
 }
 
-func (f *RegexField) Clean() (error ValidationError) {
+func (f *RegexField) Clean() (interface{}, ValidationError) {
 	matches, err := regexp.MatchString("^"+f.MatchString+"$", f.value)
 	if err != nil {
-		return errors.New(
+		return nil, errors.New(
 			"The regexp could not be compiled.")
 	}
 	if !matches {
-		return errors.New(fmt.Sprint(
+		return nil, errors.New(fmt.Sprint(
 			"The input '", f.value, "' did not match '",
 			f.MatchString, "'."))
 	}
 	f.cleaned_value = f.value
-	return nil
+	return f.cleaned_value, nil
 }

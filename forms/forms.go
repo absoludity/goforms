@@ -3,7 +3,7 @@
 package forms
 
 import (
-    "goforms/fields"
+	"goforms/fields"
 )
 
 type Form struct {
@@ -23,9 +23,9 @@ func (f *Form) IsValid() bool {
 	errors := map[string]string{}
 
 	for fieldName, field := range f.Fields {
-		err := field.Clean()
+		cleanedValue, err := field.Clean()
 		if err == nil {
-			cleanedData[fieldName] = field.CleanedValue()
+			cleanedData[fieldName] = cleanedValue
 		} else {
 			errors[fieldName] = err.Error()
 			isValid = false
@@ -54,8 +54,8 @@ func (f *Form) SetFormData(data FormData) {
 func NewForm(formFields ...fields.Field) *Form {
 	form := Form{}
 	form.Fields = make(map[string]fields.Field)
-    for _, field := range formFields {
-        form.Fields[field.Name()] = field
-    }
+	for _, field := range formFields {
+		form.Fields[field.Name()] = field
+	}
 	return &form
 }
