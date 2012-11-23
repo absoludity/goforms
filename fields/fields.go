@@ -3,7 +3,6 @@
 package fields
 
 type Field interface {
-	Name() string
 	SetValue(string)
 	Value() string
 	Clean() (interface{}, ValidationError)
@@ -24,9 +23,6 @@ type BaseField struct {
 // CleanedValue returns the value prepared during clean.
 func (f *BaseField) CleanedValue() interface{} {
 	return f.cleaned_value
-}
-func (f *BaseField) Name() string {
-	return f.name
 }
 func (f *BaseField) SetValue(value string) {
 	f.value = value
