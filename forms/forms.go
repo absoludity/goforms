@@ -51,15 +51,9 @@ func (f *Form) SetFormData(data FormData) {
 	}
 }
 
-func NewForm(formFields ...fields.Field) *Form {
-	form := Form{}
-	form.Fields = make(map[string]fields.Field)
-	for _, field := range formFields {
-		form.Fields[field.Name()] = field
-	}
-	return &form
-}
-func NewForm2(formFields map[string]fields.Field) *Form {
+type FormFields map[string]fields.Field
+
+func NewForm(formFields FormFields) *Form {
     form := Form{Fields: formFields}
     return &form
 }

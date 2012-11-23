@@ -19,13 +19,12 @@ var _ = Suite(&FormTestSuite{})
 func (s *FormTestSuite) MakeForm(data FormData) *Form {
 	descriptionField := fields.NewCharField("description")
 	descriptionField.MaxLength = 10
-	fields := map[string]fields.Field{
+	egForm := NewForm(FormFields{
 		"description":    descriptionField,
 		"purchase_count": fields.NewIntegerField("purchase_count"),
 		"notused":        fields.NewCharField("notused"),
-	}
+	})
 
-	egForm := NewForm2(fields)
 	if data != nil {
 		egForm.SetFormData(data)
 	}
