@@ -25,9 +25,7 @@ func TestCleanInteger(t *testing.T) {
 
         cleanedValue, err := f.Clean()
 
-        if !ErrorsEquivalent(err, tt.err) ||
-            cleanedValue != tt.out ||
-            f.CleanedValue() != tt.out {
+        if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
             t.Errorf("%d. Clean() after SetValue(%v) => (%v, %q), expected (%v, %q).", i, tt.in, cleanedValue, err, tt.out, tt.err)
         }
 

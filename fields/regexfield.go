@@ -13,7 +13,6 @@ type RegexField struct {
 
 func NewRegexField(name string, matchString string) *RegexField {
 	field := RegexField{MatchString: matchString}
-	field.name = name
 	return &field
 }
 
@@ -28,6 +27,5 @@ func (f *RegexField) Clean() (interface{}, ValidationError) {
 			"The input '", f.value, "' did not match '",
 			f.MatchString, "'."))
 	}
-	f.cleaned_value = f.value
-	return f.cleaned_value, nil
+	return f.value, nil
 }

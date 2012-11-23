@@ -6,7 +6,6 @@ type Field interface {
 	SetValue(string)
 	Value() string
 	Clean() (interface{}, ValidationError)
-	CleanedValue() interface{}
 }
 
 type ValidationError interface {
@@ -15,15 +14,9 @@ type ValidationError interface {
 
 // BaseField contains items common to all form fields.
 type BaseField struct {
-	name          string
 	value         string
-	cleaned_value interface{}
 }
 
-// CleanedValue returns the value prepared during clean.
-func (f *BaseField) CleanedValue() interface{} {
-	return f.cleaned_value
-}
 func (f *BaseField) SetValue(value string) {
 	f.value = value
 }

@@ -17,8 +17,7 @@ var _ = Suite(&FormTestSuite{})
 
 // MakeForm is a helper method to make a form with optional form data.
 func (s *FormTestSuite) MakeForm(data FormData) *Form {
-	descriptionField := fields.NewCharField("description")
-	descriptionField.MaxLength = 10
+    descriptionField := fields.CharField{MaxLength: 10}
 	egForm := NewForm(FormFields{
 		"description":    descriptionField,
 		"purchase_count": fields.NewIntegerField("purchase_count"),

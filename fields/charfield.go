@@ -27,14 +27,5 @@ func (f *CharField) Clean() (interface{}, ValidationError) {
 			f.MinLength, " characters."))
 	}
 
-	f.cleaned_value = f.value
-	return f.cleaned_value, nil
+	return f.value, nil
 }
-
-func NewCharField(name string) *CharField {
-	field := CharField{}
-	field.name = name
-	return &field
-}
-
-

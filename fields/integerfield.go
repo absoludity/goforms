@@ -11,7 +11,6 @@ type IntegerField struct {
 
 func NewIntegerField(name string) *IntegerField {
 	field := IntegerField{}
-	field.name = name
 	return &field
 }
 
@@ -23,7 +22,6 @@ func (f *IntegerField) Clean() (interface{}, ValidationError) {
 		return nil, errors.New(
 			"The value must be a valid integer.")
 	}
-	f.cleaned_value = cleaned_value
-	return f.cleaned_value, nil
+	return cleaned_value, nil
 }
 

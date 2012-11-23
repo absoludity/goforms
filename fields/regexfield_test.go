@@ -24,9 +24,7 @@ func TestCleanRegex(t *testing.T) {
 
         cleanedValue, err := f.Clean()
 
-        if !ErrorsEquivalent(err, tt.err) ||
-            cleanedValue != tt.out ||
-            f.CleanedValue() != tt.out {
+        if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
             t.Errorf("%d. Clean() for regex %q with value %q => (%v, %q), expected (%v, %q).", i, tt.regex, tt.in, cleanedValue, err, tt.out, tt.err)
         }
     }
