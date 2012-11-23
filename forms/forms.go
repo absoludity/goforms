@@ -7,8 +7,8 @@ import (
 )
 
 type Form struct {
-	Errors      map[string]string
 	Fields      map[string]fields.Field
+	Errors      map[string]string
 	CleanedData map[string]interface{}
 }
 
@@ -58,4 +58,8 @@ func NewForm(formFields ...fields.Field) *Form {
 		form.Fields[field.Name()] = field
 	}
 	return &form
+}
+func NewForm2(formFields map[string]fields.Field) *Form {
+    form := Form{Fields: formFields}
+    return &form
 }
