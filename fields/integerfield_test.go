@@ -19,11 +19,9 @@ var cleanIntegerCases = IntegerTestData{
 
 func TestCleanInteger(t *testing.T) {
     for i, tt := range cleanIntegerCases {
-        // XXX Why even have fieldname - do Django forms have a reason? (ie. as opposed to the key of the form).
-        f := NewIntegerField("fieldname")
-        f.SetValue(tt.in)
+        f := IntegerField{}
 
-        cleanedValue, err := f.Clean()
+        cleanedValue, err := f.Clean(tt.in)
 
         if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
             t.Errorf("%d. Clean() after SetValue(%v) => (%v, %q), expected (%v, %q).", i, tt.in, cleanedValue, err, tt.out, tt.err)

@@ -6,14 +6,17 @@ import (
 	"goforms/fields"
 )
 
-type Form struct {
-	Fields      map[string]fields.Field
-	Errors      map[string]string
-	CleanedData map[string]interface{}
-}
-
+type FormFields map[string]fields.Field
 // FormData just defines the type used in http.Request.Form
 type FormData map[string][]string
+
+type Form struct {
+	Fields      FormFields
+    Data        FormData
+	CleanedData map[string]interface{}
+	Errors      map[string]string
+}
+
 
 // IsValid verifies the validity of all the field values
 // and collects the errors.
@@ -23,7 +26,17 @@ func (f *Form) IsValid() bool {
 	errors := map[string]string{}
 
 	for fieldName, field := range f.Fields {
-		cleanedValue, err := field.Clean()
+        dataValues, ok := f.Data[fieldName]
+        dataValue := ""
+        if ok {
+            if len(dataValues) == 0 {
+                // Is this possible? Need to add case to table-test for forms when created.
+                continue
+            } else {
+                dataValue = dataValues[0]
+            }
+        }
+		cleanedValue, err := field.Clean(dataValue)
 		if err == nil {
 			cleanedData[fieldName] = cleanedValue
 		} else {
@@ -39,19 +52,6 @@ func (f *Form) IsValid() bool {
 	}
 	return isValid
 }
-
-func (f *Form) SetFormData(data FormData) {
-	for fieldName, values := range data {
-		field := f.Fields[fieldName]
-		if field != nil {
-			// For the moment, just handle single-valued
-			// params.
-			field.SetValue(values[0])
-		}
-	}
-}
-
-type FormFields map[string]fields.Field
 
 func NewForm(formFields FormFields) *Form {
     form := Form{Fields: formFields}

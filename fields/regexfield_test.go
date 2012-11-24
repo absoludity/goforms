@@ -19,10 +19,9 @@ var cleanRegexCases = RegexTestData{
 
 func TestCleanRegex(t *testing.T) {
     for i, tt := range cleanRegexCases {
-        f := NewRegexField("fieldname", tt.regex)
-        f.SetValue(tt.in)
+        f := RegexField{MatchString: tt.regex}
 
-        cleanedValue, err := f.Clean()
+        cleanedValue, err := f.Clean(tt.in)
 
         if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
             t.Errorf("%d. Clean() for regex %q with value %q => (%v, %q), expected (%v, %q).", i, tt.regex, tt.in, cleanedValue, err, tt.out, tt.err)

@@ -5,19 +5,12 @@ import (
     "strconv"
 )
 
-type IntegerField struct {
-	BaseField
-}
-
-func NewIntegerField(name string) *IntegerField {
-	field := IntegerField{}
-	return &field
-}
+type IntegerField struct {}
 
 // Clean verifies the validity of the given value and prepares the cleaned
 // value, returning an error for invalid data.
-func (f *IntegerField) Clean() (interface{}, ValidationError) {
-	cleaned_value, error := strconv.Atoi(f.value)
+func (f IntegerField) Clean(value string) (interface{}, ValidationError) {
+	cleaned_value, error := strconv.Atoi(value)
 	if error != nil {
 		return nil, errors.New(
 			"The value must be a valid integer.")

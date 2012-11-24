@@ -16,16 +16,16 @@ func NewRegexField(name string, matchString string) *RegexField {
 	return &field
 }
 
-func (f *RegexField) Clean() (interface{}, ValidationError) {
-	matches, err := regexp.MatchString("^"+f.MatchString+"$", f.value)
+func (f *RegexField) Clean(value string) (interface{}, ValidationError) {
+	matches, err := regexp.MatchString("^"+f.MatchString+"$", value)
 	if err != nil {
 		return nil, errors.New(
 			"The regexp could not be compiled.")
 	}
 	if !matches {
 		return nil, errors.New(fmt.Sprint(
-			"The input '", f.value, "' did not match '",
+			"The input '", value, "' did not match '",
 			f.MatchString, "'."))
 	}
-	return f.value, nil
+	return value, nil
 }

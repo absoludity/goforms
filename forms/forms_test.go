@@ -17,30 +17,16 @@ var _ = Suite(&FormTestSuite{})
 
 // MakeForm is a helper method to make a form with optional form data.
 func (s *FormTestSuite) MakeForm(data FormData) *Form {
-    descriptionField := fields.CharField{MaxLength: 10}
 	egForm := NewForm(FormFields{
-		"description":    descriptionField,
-		"purchase_count": fields.NewIntegerField("purchase_count"),
-		"notused":        fields.NewCharField("notused"),
+        "description":    fields.CharField{MaxLength: 10},
+		"purchase_count": fields.IntegerField{},
+		"notused":        fields.CharField{},
 	})
 
 	if data != nil {
-		egForm.SetFormData(data)
+        egForm.Data = data
 	}
 	return egForm
-}
-
-func (s *FormTestSuite) TestSetFormData(c *C) {
-	var formData = FormData{
-		"description":    []string{"short desc"},
-		"purchase_count": []string{"24"},
-		"ignored":        []string{"ignore me"},
-	}
-	myForm := s.MakeForm(formData)
-
-	c.Check(myForm.Fields["description"].Value(), Equals, "short desc")
-	c.Check(myForm.Fields["purchase_count"].Value(), Equals, "24")
-	c.Check(myForm.Fields["notused"].Value(), Equals, "")
 }
 
 func (s *FormTestSuite) TestIsValidTrue(c *C) {

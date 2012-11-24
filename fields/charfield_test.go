@@ -40,9 +40,7 @@ func ErrorsEquivalent(e1, e2 error) bool {
 func TestClean(t *testing.T) {
 	for i, tt := range cleanTestCases {
         f := CharField{MinLength: tt.min, MaxLength: tt.max}
-		f.SetValue(tt.in)
-
-		cleanedValue, err := f.Clean()
+		cleanedValue, err := f.Clean(tt.in)
 
         if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
             t.Errorf("%d. Clean() with (value, min, max)=(%q, %v, %v) => (%q, %q), expected (%q, %q).", i, tt.in, tt.min, tt.max, cleanedValue, err, tt.out, tt.err)
