@@ -9,3 +9,7 @@ type Field interface {
 type ValidationError interface {
 	Error() string
 }
+
+type BaseField struct {
+	Required bool
+}

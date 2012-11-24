@@ -1,11 +1,12 @@
 package fields
 
 import (
-    "errors"
-    "fmt"
+	"errors"
+	"fmt"
 )
 
 type CharField struct {
+	BaseField
 	MaxLength int
 	MinLength int
 }
@@ -14,7 +15,6 @@ type CharField struct {
 // value, returning an error for invalid data.
 func (f CharField) Clean(value string) (interface{}, ValidationError) {
 	// Ensure value is between max and min length,
-	// Might be worth a Cleanable interface?
 	if f.MaxLength != 0 && len(value) > f.MaxLength {
 		return nil, errors.New(fmt.Sprint(
 			"The value must have a maximum length of ",
