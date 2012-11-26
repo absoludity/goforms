@@ -10,7 +10,7 @@ func MakeForm(data url.Values) Form {
 	egForm := Form{
 		Fields: FormFields{
 			"description":   fields.CharField{MaxLength: 10},
-			"purchaseCount": fields.IntegerField{},
+            "purchaseCount": fields.IntegerField{Required: true},
 			"otherField":    fields.CharField{},
 		},
 		Data: data,
@@ -53,6 +53,16 @@ var FormTestCases = FormTestData{
 			"purchaseCount": "The value must be a valid integer.",
 		},
 	},
+	{
+		url.Values{
+			"description":   {"short desc"},
+			"ignore":        {"ignore me"},
+		},
+		nil,
+		TestErrorData{
+			"purchaseCount": "This field is required.",
+		},
+	},
 }
 
 func TestIsValid(t *testing.T) {
@@ -63,6 +73,36 @@ func TestIsValid(t *testing.T) {
 
 		CheckFormOutput(t, i, &myForm)
 	}
+}
+
+
+func TestRegexRequired(t *testing.T) {
+	egForm := Form{
+		Fields: FormFields{
+			"description":   fields.CharField{},
+            "requiredField": fields.RegexField{Required: true},
+		},
+		Data: url.Values{
+            "description": {"whohoo"},
+        },
+	}
+
+    isValid := egForm.IsValid()
+
+    if isValid {
+        t.Errorf("Form with missing required field should not be valid.")
+    }
+    if len(egForm.Errors) != 1 {
+        t.Errorf("Expected 1 validation error, got %d.", len(egForm.Errors))
+    }
+    err, ok := egForm.Errors["requiredField"]
+    expectedError := "This field is required."
+    switch {
+    case !ok:
+        t.Errorf("Required field was not required.")
+    case err != expectedError:
+        t.Errorf("Expected %q, got %q.", expectedError, err)
+    }
 }
 
 func CheckFormValidity(t *testing.T, testCaseIndex int, f *Form) {

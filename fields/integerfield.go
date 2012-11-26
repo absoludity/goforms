@@ -5,7 +5,9 @@ import (
     "strconv"
 )
 
-type IntegerField struct {}
+type IntegerField struct {
+    Required bool
+}
 
 // Clean verifies the validity of the given value and prepares the cleaned
 // value, returning an error for invalid data.
@@ -18,3 +20,6 @@ func (f IntegerField) Clean(value string) (interface{}, ValidationError) {
 	return cleaned_value, nil
 }
 
+func (f IntegerField) IsRequired() bool {
+    return f.Required
+}

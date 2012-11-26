@@ -36,6 +36,11 @@ func (f *Form) IsValid() bool {
                 dataValue = dataValues[0]
             }
         }
+        if !ok && field.IsRequired() {
+            errors[fieldName] = "This field is required."
+            isValid = false
+            continue
+        }
 		cleanedValue, err := field.Clean(dataValue)
 		if err == nil {
 			cleanedData[fieldName] = cleanedValue
