@@ -9,7 +9,7 @@ import (
 func MakeForm(data url.Values) Form {
 	egForm := Form{
 		Fields: FormFields{
-			"description":   fields.CharField{MaxLength: 10},
+			"description":   fields.CharField{Max: 10},
             "purchaseCount": fields.IntegerField{Required: true},
 			"otherField":    fields.CharField{},
 		},

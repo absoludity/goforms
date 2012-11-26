@@ -7,23 +7,23 @@ import (
 
 type CharField struct {
 	BaseField
-	MaxLength int
-	MinLength int
+	Max int
+	Min int
 }
 
 // Clean verifies the validity of the given value and prepares the cleaned
 // value, returning an error for invalid data.
 func (f CharField) Clean(value string) (interface{}, ValidationError) {
 	// Ensure value is between max and min length,
-	if f.MaxLength != 0 && len(value) > f.MaxLength {
+	if f.Max != 0 && len(value) > f.Max {
 		return nil, errors.New(fmt.Sprint(
 			"The value must have a maximum length of ",
-			f.MaxLength, " characters."))
+			f.Max, " characters."))
 	}
-	if len(value) < f.MinLength {
+	if len(value) < f.Min {
 		return nil, errors.New(fmt.Sprint(
 			"The value must have a minimum length of ",
-			f.MinLength, " characters."))
+			f.Min, " characters."))
 	}
 
 	return value, nil
@@ -44,13 +44,13 @@ func NewCharField(defaults Defaults) CharField {
             if v, ok := value.(bool); ok {
                 field.Required = v
             }
-        case "MinLength":
+        case "Min":
             if v, ok := value.(int); ok {
-                field.MinLength = v
+                field.Min = v
             }
-        case "MaxLength":
+        case "Max":
             if v, ok := value.(int); ok {
-                field.MaxLength = v
+                field.Max = v
             }
         }
     }
