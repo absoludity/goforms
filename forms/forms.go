@@ -4,25 +4,25 @@ package forms
 
 import (
 	"goforms/fields"
+	"net/url"
 )
 
 type FormFields map[string]fields.Field
-// FormData just defines the type used in http.Request.Form
-type FormData map[string][]string
 
 type Form struct {
 	Fields      FormFields
-    Data        FormData
+    Data        url.Values
 	CleanedData map[string]interface{}
 	Errors      map[string]string
 }
 
+type CleanedData map[string]interface{}
 
 // IsValid verifies the validity of all the field values
 // and collects the errors.
 func (f *Form) IsValid() bool {
 	isValid := true
-	cleanedData := map[string]interface{}{}
+	cleanedData := CleanedData{}
 	errors := map[string]string{}
 
 	for fieldName, field := range f.Fields {
