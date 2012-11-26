@@ -4,6 +4,7 @@ package fields
 
 type Field interface {
 	Clean(string) (interface{}, ValidationError)
+    IsRequired() bool
 }
 
 type ValidationError interface {
@@ -12,6 +13,10 @@ type ValidationError interface {
 
 type BaseField struct {
 	Required bool
+}
+
+func (f BaseField) IsRequired() bool {
+    return f.Required
 }
 
 type Defaults map[string]interface{}

@@ -9,9 +9,13 @@ import (
 func MakeForm(data url.Values) Form {
 	egForm := Form{
 		Fields: FormFields{
-			"description":   fields.CharField{Max: 10},
-            "purchaseCount": fields.IntegerField{Required: true},
-			"otherField":    fields.CharField{},
+			"description": fields.NewCharField(fields.Defaults{
+				"Max": 10,
+			}),
+			"purchaseCount": fields.NewIntegerField(fields.Defaults{
+				"Required": true,
+			}),
+			"otherField": fields.CharField{},
 		},
 		Data: data,
 	}
@@ -55,8 +59,8 @@ var FormTestCases = FormTestData{
 	},
 	{
 		url.Values{
-			"description":   {"short desc"},
-			"ignore":        {"ignore me"},
+			"description": {"short desc"},
+			"ignore":      {"ignore me"},
 		},
 		nil,
 		TestErrorData{
@@ -75,36 +79,6 @@ func TestIsValid(t *testing.T) {
 	}
 }
 
-
-func TestRegexRequired(t *testing.T) {
-	egForm := Form{
-		Fields: FormFields{
-			"description":   fields.CharField{},
-            "requiredField": fields.RegexField{Required: true},
-		},
-		Data: url.Values{
-            "description": {"whohoo"},
-        },
-	}
-
-    isValid := egForm.IsValid()
-
-    if isValid {
-        t.Errorf("Form with missing required field should not be valid.")
-    }
-    if len(egForm.Errors) != 1 {
-        t.Errorf("Expected 1 validation error, got %d.", len(egForm.Errors))
-    }
-    err, ok := egForm.Errors["requiredField"]
-    expectedError := "This field is required."
-    switch {
-    case !ok:
-        t.Errorf("Required field was not required.")
-    case err != expectedError:
-        t.Errorf("Expected %q, got %q.", expectedError, err)
-    }
-}
-
 func CheckFormValidity(t *testing.T, testCaseIndex int, f *Form) {
 	isValid := f.IsValid()
 
@@ -118,7 +92,7 @@ func CheckFormValidity(t *testing.T, testCaseIndex int, f *Form) {
 
 func CheckFormOutput(t *testing.T, testCaseIndex int, f *Form) {
 	tt := FormTestCases[testCaseIndex]
-    // XXX see reflect.DeepEqual
+	// XXX see reflect.DeepEqual
 	if len(tt.out) != len(f.CleanedData) {
 		t.Errorf("%d. Expected %d entries in CleanedData, got %d.", testCaseIndex, len(tt.out), len(f.CleanedData))
 	}
@@ -131,7 +105,7 @@ func CheckFormOutput(t *testing.T, testCaseIndex int, f *Form) {
 			t.Errorf("%d. %q=>%v found in CleanedData. Expected %q=>%v.", testCaseIndex, key, actual, key, expected)
 		}
 	}
-    // XXX see reflect.DeepEqual
+	// XXX see reflect.DeepEqual
 	if len(tt.err) != len(f.Errors) {
 		t.Errorf("%d. Expected %d entries in Errors, got %d. Errors=>%v.", testCaseIndex, len(tt.err), len(f.Errors), f.Errors)
 	}
