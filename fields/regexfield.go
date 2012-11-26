@@ -1,19 +1,14 @@
 package fields
 
 import (
-    "errors"
-    "fmt"
-    "regexp"
+	"errors"
+	"fmt"
+	"regexp"
 )
 
 type RegexField struct {
-	CharField
+	BaseField
 	MatchString string
-}
-
-func NewRegexField(name string, matchString string) *RegexField {
-	field := RegexField{MatchString: matchString}
-	return &field
 }
 
 func (f RegexField) Clean(value string) (interface{}, ValidationError) {
@@ -28,4 +23,21 @@ func (f RegexField) Clean(value string) (interface{}, ValidationError) {
 			f.MatchString, "'."))
 	}
 	return value, nil
+}
+
+func NewRegexField(defaults Defaults) RegexField {
+	field := RegexField{}
+	for fieldName, value := range defaults {
+		switch fieldName {
+		case "Required":
+			if v, ok := value.(bool); ok {
+				field.Required = v
+			}
+		case "MatchString":
+			if v, ok := value.(string); ok {
+				field.MatchString = v
+			}
+		}
+	}
+    return field
 }

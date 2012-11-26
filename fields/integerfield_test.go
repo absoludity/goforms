@@ -19,7 +19,7 @@ var cleanIntegerCases = IntegerTestData{
 
 func TestCleanInteger(t *testing.T) {
     for i, tt := range cleanIntegerCases {
-        f := IntegerField{}
+        f := NewIntegerField(Defaults{})
 
         cleanedValue, err := f.Clean(tt.in)
 

@@ -19,7 +19,7 @@ var cleanRegexCases = RegexTestData{
 
 func TestCleanRegex(t *testing.T) {
     for i, tt := range cleanRegexCases {
-        f := RegexField{MatchString: tt.regex}
+        f := NewRegexField(Defaults{"MatchString": tt.regex})
 
         cleanedValue, err := f.Clean(tt.in)
 

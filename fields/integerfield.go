@@ -1,12 +1,12 @@
 package fields
 
 import (
-    "errors"
-    "strconv"
+	"errors"
+	"strconv"
 )
 
 type IntegerField struct {
-    Required bool
+	BaseField
 }
 
 // Clean verifies the validity of the given value and prepares the cleaned
@@ -21,5 +21,18 @@ func (f IntegerField) Clean(value string) (interface{}, ValidationError) {
 }
 
 func (f IntegerField) IsRequired() bool {
-    return f.Required
+	return f.Required
+}
+
+func NewIntegerField(defaults Defaults) IntegerField {
+	field := IntegerField{}
+	for fieldName, value := range defaults {
+		switch fieldName {
+		case "Required":
+			if v, ok := value.(bool); ok {
+				field.Required = v
+			}
+		}
+	}
+    return field
 }
