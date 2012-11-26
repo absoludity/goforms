@@ -13,3 +13,5 @@ type ValidationError interface {
 type BaseField struct {
 	Required bool
 }
+
+type Defaults map[string]interface{}

@@ -21,6 +21,7 @@ var cleanTestCases = CharTestData{
 	{"1234", 0, 3, nil, errors.New("The value must have a maximum length of 3 characters.")},
 }
 
+// XXX see reflect.DeepEqual
 func ErrorsEquivalent(e1, e2 error) bool {
     if e1 == nil && e2 == nil {
         return true
@@ -39,7 +40,7 @@ func ErrorsEquivalent(e1, e2 error) bool {
 
 func TestClean(t *testing.T) {
 	for i, tt := range cleanTestCases {
-        f := CharField{MinLength: tt.min, MaxLength: tt.max}
+        f := NewCharField(Defaults{"MinLength": tt.min, "MaxLength": tt.max})
 		cleanedValue, err := f.Clean(tt.in)
 
         if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {

@@ -118,6 +118,7 @@ func CheckFormValidity(t *testing.T, testCaseIndex int, f *Form) {
 
 func CheckFormOutput(t *testing.T, testCaseIndex int, f *Form) {
 	tt := FormTestCases[testCaseIndex]
+    // XXX see reflect.DeepEqual
 	if len(tt.out) != len(f.CleanedData) {
 		t.Errorf("%d. Expected %d entries in CleanedData, got %d.", testCaseIndex, len(tt.out), len(f.CleanedData))
 	}
@@ -130,6 +131,7 @@ func CheckFormOutput(t *testing.T, testCaseIndex int, f *Form) {
 			t.Errorf("%d. %q=>%v found in CleanedData. Expected %q=>%v.", testCaseIndex, key, actual, key, expected)
 		}
 	}
+    // XXX see reflect.DeepEqual
 	if len(tt.err) != len(f.Errors) {
 		t.Errorf("%d. Expected %d entries in Errors, got %d. Errors=>%v.", testCaseIndex, len(tt.err), len(f.Errors), f.Errors)
 	}

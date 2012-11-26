@@ -28,3 +28,31 @@ func (f CharField) Clean(value string) (interface{}, ValidationError) {
 
 	return value, nil
 }
+
+// This is a helper for creating fields, so that users of goforms/fields
+// don't need to do things like:
+// "purchaseCount": fields.IntegerField{fields.BaseField{Required: true}},
+// More details here:
+// https://groups.google.com/forum/?fromgroups=#!topic/golang-nuts/FS_H0SiEioA
+// If that ever changes, we should be able to use simple
+// struct literals.
+func NewCharField(defaults Defaults) CharField {
+    field := CharField{}
+    for fieldName, value := range defaults {
+        switch fieldName {
+        case "Required":
+            if v, ok := value.(bool); ok {
+                field.Required = v
+            }
+        case "MinLength":
+            if v, ok := value.(int); ok {
+                field.MinLength = v
+            }
+        case "MaxLength":
+            if v, ok := value.(int); ok {
+                field.MaxLength = v
+            }
+        }
+    }
+    return field
+}
