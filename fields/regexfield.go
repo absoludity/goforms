@@ -11,6 +11,8 @@ type RegexField struct {
 	MatchString string
 }
 
+// Check whether the given string value is valid for this field
+// and return the cleaned value or a relevant error.
 func (f RegexField) Clean(value string) (interface{}, ValidationError) {
 	matches, err := regexp.MatchString("^"+f.MatchString+"$", value)
 	if err != nil {
@@ -25,6 +27,7 @@ func (f RegexField) Clean(value string) (interface{}, ValidationError) {
 	return value, nil
 }
 
+// Create and initialise the new fields with the given defaults.
 func NewRegexField(defaults Defaults) RegexField {
 	field := RegexField{}
 	for fieldName, value := range defaults {

@@ -11,8 +11,8 @@ type CharField struct {
 	Min int
 }
 
-// Clean verifies the validity of the given value and prepares the cleaned
-// value, returning an error for invalid data.
+// Check whether the given string value is valid for this field
+// and return the cleaned value or a relevant error.
 func (f CharField) Clean(value string) (interface{}, ValidationError) {
 	// Ensure value is between max and min length,
 	if f.Max != 0 && len(value) > f.Max {
@@ -29,30 +29,31 @@ func (f CharField) Clean(value string) (interface{}, ValidationError) {
 	return value, nil
 }
 
-// This is a helper for creating fields, so that users of goforms/fields
-// don't need to do things like:
-// "purchaseCount": fields.IntegerField{fields.BaseField{Required: true}},
-// More details here:
-// https://groups.google.com/forum/?fromgroups=#!topic/golang-nuts/FS_H0SiEioA
-// If that ever changes, we should be able to use simple
-// struct literals.
+// Create and initialise the new fields with the given defaults.
 func NewCharField(defaults Defaults) CharField {
-    field := CharField{}
-    for fieldName, value := range defaults {
-        switch fieldName {
-        case "Required":
-            if v, ok := value.(bool); ok {
-                field.Required = v
-            }
-        case "Min":
-            if v, ok := value.(int); ok {
-                field.Min = v
-            }
-        case "Max":
-            if v, ok := value.(int); ok {
-                field.Max = v
-            }
-        }
-    }
-    return field
+	// This is a helper for creating fields, so that users of goforms/fields
+	// don't need to do things like:
+	// "purchaseCount": fields.IntegerField{fields.BaseField{Required: true}},
+	// More details here:
+	// https://groups.google.com/forum/?fromgroups=#!topic/golang-nuts/FS_H0SiEioA
+	// If that ever changes, we should be able to use simple
+	// struct literals.
+	field := CharField{}
+	for fieldName, value := range defaults {
+		switch fieldName {
+		case "Required":
+			if v, ok := value.(bool); ok {
+				field.Required = v
+			}
+		case "Min":
+			if v, ok := value.(int); ok {
+				field.Min = v
+			}
+		case "Max":
+			if v, ok := value.(int); ok {
+				field.Max = v
+			}
+		}
+	}
+	return field
 }

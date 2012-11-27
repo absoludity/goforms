@@ -1,7 +1,16 @@
-// Package fields implements form fields for validating and cleaning
-// data from http requests.
+// Copyright 2012 The GoForms Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+/*
+Package goforms/fields provides various types of fields for validating
+and cleaning individual form values.
+*/
 package fields
 
+// A field is able to clean a string value to the correct type
+// or indicate a relevant error, as well as determine whether it is
+// required.
 type Field interface {
 	Clean(string) (interface{}, ValidationError)
     IsRequired() bool
@@ -11,12 +20,15 @@ type ValidationError interface {
 	Error() string
 }
 
+// The types that are embedded/shared with more specific field types.
 type BaseField struct {
 	Required bool
 }
 
+// Returns whether data for this field is required.
 func (f BaseField) IsRequired() bool {
     return f.Required
 }
 
+// Specify the default attributes of a field.
 type Defaults map[string]interface{}

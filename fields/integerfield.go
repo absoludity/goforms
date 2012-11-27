@@ -9,8 +9,8 @@ type IntegerField struct {
 	BaseField
 }
 
-// Clean verifies the validity of the given value and prepares the cleaned
-// value, returning an error for invalid data.
+// Check whether the given string value is valid for this field
+// and return the cleaned value or a relevant error.
 func (f IntegerField) Clean(value string) (interface{}, ValidationError) {
 	cleaned_value, error := strconv.Atoi(value)
 	if error != nil {
@@ -24,6 +24,7 @@ func (f IntegerField) IsRequired() bool {
 	return f.Required
 }
 
+// Create and initialise the new fields with the given defaults.
 func NewIntegerField(defaults Defaults) IntegerField {
 	field := IntegerField{}
 	for fieldName, value := range defaults {
