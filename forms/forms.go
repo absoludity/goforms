@@ -28,6 +28,8 @@ Package goforms/forms enables form data validation, cleaning and error collectio
 		// personForm.CleanedData contains cleaned data
 		// (ie. an int for age in this case):
 		// {"name": "Michael Nelson", "age": 37}
+		// so that for required fields you can safely do:
+		// var age int = personForm.CleanedData["age"].(int)
 	} else {
 		doStuffWithErrors()
 		// If personForm.Data = urls.Values{"age": {"Not a number"}},
