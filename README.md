@@ -1,7 +1,7 @@
 # GoForms - form data validation, cleaning and error reporting
 
 The goforms library is a proof-of-concept for a data validation, cleaning and
-error collecting library for golang, in similar style to Django's django.forms
+error collecting using [Go](http://golang.org), in a similar style to Django's django.forms
 library. It enables thin handlers like this:
 
 ```go
@@ -19,14 +19,14 @@ func my_post_handler(w http.ResponseWriter, r *http.Request){
 ```
 
 ## Installation and tests
-Running
+To install goforms into your current Go workspace:
 ```
 $ go get github.com/absoludity/goforms/forms
 ```
-will add goforms to your current go workspace. You can run the tests with
+
+You can then run the tests with
 ```
-$ go test github.com/absoludity/goforms/fields
-github.com/absoludity/goforms/forms
+$ go test github.com/absoludity/goforms/fields github.com/absoludity/goforms/forms
 ```
 
 ## Example
@@ -47,11 +47,9 @@ github.com/absoludity/goforms/forms
 ```
 
 ### Use the form in your handler
+Using the [http.Request](http://golang.org/pkg/net/http/#Request) objects Form (r.Form):
 ```go
-	personForm.Data = urls.Values{
-		"name": {"Michael Nelson"},
-		"age":  {"37"},
-	}
+	personForm.Data = r.Form
 
 	if personForm.IsValid() {
 		doStuffWithCleanedData()
