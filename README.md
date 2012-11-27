@@ -18,6 +18,8 @@ func my_post_handler(w http.ResponseWriter, r *http.Request){
     }
 ```
 
+For another form-data processing library, see [Gorilla/schema](https://github.com/gorilla/schema), which fills structs with form data using struct tags.
+
 ## Installation and tests
 To install goforms into your current Go workspace:
 ```
