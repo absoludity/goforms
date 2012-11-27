@@ -7,20 +7,21 @@ import (
 )
 
 func MakeForm(data url.Values) Form {
-	egForm := Form{
-		Fields: FormFields{
-			"description": fields.NewCharField(fields.Defaults{
-				"Max": 10,
-			}),
-			"purchaseCount": fields.NewIntegerField(fields.Defaults{
-				"Required": true,
-			}),
-			"otherField": fields.CharField{},
-		},
-		Data: data,
+	formFields := FormFields{
+		"name": fields.NewCharField(fields.Defaults{
+			"Required": true,
+		}),
+		"age": fields.NewIntegerField(fields.Defaults{
+			"Required": false,
+		}),
+		"about": fields.NewCharField(fields.Defaults{
+			"Max": 10,
+		}),
 	}
+	personForm := Form{Fields: formFields}
+	personForm.Data = data
 
-	return egForm
+	return personForm
 }
 
 type TestErrorData map[string]string
@@ -32,40 +33,54 @@ type FormTestData []struct {
 }
 
 var FormTestCases = FormTestData{
+	// Values are cleaned (name, age) and extra data is ignored (ignore).
 	{
 		url.Values{
-			"description":   {"short desc"},
-			"purchaseCount": {"24"},
-			"ignore":        {"ignore me"},
+			"name":   {"Alpha Beta"},
+			"age":    {"24"},
+			"ignore": {"ignore me"},
 		},
 		CleanedData{
-			"description":   "short desc",
-			"purchaseCount": 24,
-			"otherField":    "",
+			"name": "Alpha Beta",
+			"age":  24,
 		},
 		nil,
 	},
+	// Invalid data results in collected errors (age, about).
 	{
 		url.Values{
-			"description":   {"This is too long."},
-			"purchaseCount": {"abc123"},
-			"ignore":        {"ignore me"},
+			"name":   {"Alpha Beta"},
+			"age":    {"This is not a number"},
+			"about":  {"This is too long."},
+			"ignore": {"ignore me"},
 		},
 		nil,
 		TestErrorData{
-			"description":   "The value must have a maximum length of 10 characters.",
-			"purchaseCount": "The value must be a valid integer.",
+			"about": "The value must have a maximum length of 10 characters.",
+			"age":   "The value must be a valid integer.",
 		},
 	},
+	// A lack of data for a required field is an error (name).
 	{
 		url.Values{
-			"description": {"short desc"},
-			"ignore":      {"ignore me"},
+			"about": {"I like Go"},
 		},
 		nil,
 		TestErrorData{
-			"purchaseCount": "This field is required.",
+			"name": "This field is required.",
 		},
+	},
+	// Empty data for a field does not error (age).
+	// (Not sure if this is possible, but test anyway.)
+	{
+		url.Values{
+			"name": {"Alpha Beta"},
+			"age":  {},
+		},
+		CleanedData{
+			"name": "Alpha Beta",
+		},
+		nil,
 	},
 }
 

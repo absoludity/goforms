@@ -1,3 +1,4 @@
- * Updated TODO with proper eg's and context.
+ * Updated docs with proper eg's and context.
+ * Remove Form.Data, and instead provide to Form.IsValid()
  * Enable custom error messages.
  * Update field tests to use nicer in/out for test tables like form_tests.
