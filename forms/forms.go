@@ -3,7 +3,7 @@
 package forms
 
 import (
-	"goforms/fields"
+	"github.com/absoludity/goforms/fields"
 	"net/url"
 )
 
