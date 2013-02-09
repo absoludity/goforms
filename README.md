@@ -5,15 +5,20 @@ error collecting using [Go](http://golang.org), in a similar style to Django's d
 library. It enables thin handlers like this:
 
 ```go
-func my_post_handler(w http.ResponseWriter, r *http.Request){
+func my_post_handler(w http.ResponseWriter, r *http.Request) {
+    // Fill r.Form
+    if err := r.ParseForm(); err != nil {
+        http.Error(w, "Invalid request form data", 400)
+        return
+    }    
     myForm := MyCustomForm()
     myForm.Data = r.Form
 
-    if myForm.IsValid(){
+    if myForm.IsValid() {
         // Do something with myForm.CleanedData, which is the request's form
         // data after being cleaned to the correct types etc.
     } else {
-        // Re-render a template, passing in egForm.Errors which is a map
+        // Re-render a template, passing in myForm.Errors which is a map
         // of errors for each field on the form.
     }
 ```
