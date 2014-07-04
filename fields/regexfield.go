@@ -9,11 +9,27 @@ import (
 type RegexField struct {
 	BaseField
 	MatchString string
+	Max         int
+	Min         int
 }
 
 // Check whether the given string value is valid for this field
 // and return the cleaned value or a relevant error.
 func (f RegexField) Clean(value string) (interface{}, ValidationError) {
+	// Copy and paste from charfield.go
+	// Ensure value is between max and min length,
+	if f.Max != 0 && len(value) > f.Max {
+		return nil, errors.New(fmt.Sprint(
+			"The value must have a maximum length of ",
+			f.Max, " characters."))
+	}
+	if len(value) < f.Min {
+		return nil, errors.New(fmt.Sprint(
+			"The value must have a minimum length of ",
+			f.Min, " characters."))
+	}
+
+	// original code
 	matches, err := regexp.MatchString("^"+f.MatchString+"$", value)
 	if err != nil {
 		return nil, errors.New(
@@ -42,5 +58,5 @@ func NewRegexField(defaults Defaults) RegexField {
 			}
 		}
 	}
-    return field
+	return field
 }
