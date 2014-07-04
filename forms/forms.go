@@ -81,7 +81,7 @@ func (f *Form) IsValid() bool {
 		switch fieldHasData {
 		case true:
 			if len(dataValues) == 0 {
-				continue
+				fallthrough
 			} else {
 				dataValue = dataValues[0]
 			}
