@@ -56,6 +56,18 @@ func NewRegexField(defaults Defaults) RegexField {
 			if v, ok := value.(string); ok {
 				field.MatchString = v
 			}
+		case "Min":
+			{
+				if v, ok := value.(int); ok {
+					field.Min = v
+				}
+			}
+		case "Max":
+			{
+				if v, ok := value.(int); ok {
+					field.Max = v
+				}
+			}
 		}
 	}
 	return field

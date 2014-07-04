@@ -87,6 +87,7 @@ func (f *Form) IsValid() bool {
 			} else if vlen > 1 {
 				errors[fieldName] = "Multiple value availabele for this field"
 				isValid = false
+				break // do not fallthrough
 			}
 			// No value available -> check if is required
 			fallthrough

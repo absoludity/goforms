@@ -10,7 +10,7 @@ type CharTestData []struct {
 	min int
 	max int
 	out interface{}
-    err error
+	err error
 }
 
 var cleanTestCases = CharTestData{
@@ -23,28 +23,28 @@ var cleanTestCases = CharTestData{
 
 // XXX see reflect.DeepEqual
 func ErrorsEquivalent(e1, e2 error) bool {
-    if e1 == nil && e2 == nil {
-        return true
-    }
+	if e1 == nil && e2 == nil {
+		return true
+	}
 
-    if e1 == nil || e2 == nil {
-        return false
-    }
+	if e1 == nil || e2 == nil {
+		return false
+	}
 
-    if e1.Error() == e2.Error() {
-        return true
-    }
+	if e1.Error() == e2.Error() {
+		return true
+	}
 
-    return false
+	return false
 }
 
 func TestClean(t *testing.T) {
 	for i, tt := range cleanTestCases {
-        f := NewCharField(Defaults{"Min": tt.min, "Max": tt.max})
+		f := NewCharField(Defaults{"Min": tt.min, "Max": tt.max})
 		cleanedValue, err := f.Clean(tt.in)
 
-        if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
-            t.Errorf("%d. Clean() with (value, min, max)=(%q, %v, %v) => (%q, %q), expected (%q, %q).", i, tt.in, tt.min, tt.max, cleanedValue, err, tt.out, tt.err)
-        }
+		if !ErrorsEquivalent(err, tt.err) || cleanedValue != tt.out {
+			t.Errorf("%d. Clean() with (value, min, max)=(%q, %v, %v) => (%q, %q), expected (%q, %q).", i, tt.in, tt.min, tt.max, cleanedValue, err, tt.out, tt.err)
+		}
 	}
 }
