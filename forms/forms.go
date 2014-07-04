@@ -47,7 +47,8 @@ For another form-data processing library, see github.com/gorilla/schema, which f
 package forms
 
 import (
-	"github.com/absoludity/goforms/fields"
+	//"github.com/absoludity/goforms/fields"
+	"github.com/MartinBrugnara/goforms/fields"
 	"net/url"
 )
 
@@ -80,11 +81,15 @@ func (f *Form) IsValid() bool {
 		dataValue := ""
 		switch fieldHasData {
 		case true:
-			if len(dataValues) == 0 {
-				fallthrough
-			} else {
+			if vlen := len(dataValues); vlen == 1 {
 				dataValue = dataValues[0]
+				break // do not fallthrough
+			} else if vlen > 1 {
+				errors[fieldName] = "Multiple value availabele for this field"
+				isValid = false
 			}
+			// No value available -> check if is required
+			fallthrough
 		case false:
 			if field.IsRequired() {
 				errors[fieldName] = "This field is required."
