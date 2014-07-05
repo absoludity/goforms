@@ -28,12 +28,12 @@ For another form-data processing library, see [Gorilla/schema](https://github.co
 ## Installation and tests
 To install goforms into your current Go workspace:
 ```
-$ go get github.com/absoludity/goforms/forms
+$ go get github.com/MartinBrugnara/goforms/forms
 ```
 
 You can then run the tests with
 ```
-$ go test github.com/absoludity/goforms/fields github.com/absoludity/goforms/forms
+$ go test github.com/MartinBrugnara/goforms/fields github.com/MartinBrugnara/goforms/forms
 ```
 
 ## Example
@@ -78,14 +78,24 @@ Using the [http.Request](http://golang.org/pkg/net/http/#Request) objects Form (
 ## Notes
  * Originally discussed on [this golang-nuts post](http://goo.gl/pFh6I).
 
-## TODO
+## TODO 
+#### absoludity vs MartinBrugnara
  * Remove Form.Data, and instead provide data to Form.IsValid()
+ 	* Will not fix
  * Perhaps make Form.CleanedData and Form.Errors private, providing getters.
+ 	* It's ok so
  * Add defaults to fields so that a value is always included, or even remove Required, assuming that a field is required if there's no default?.
+ 	* Removing Required is not an option.
+ 	* Default value is a good idea.
  * Enable custom error messages.
+ 	* Good idea
  * Update field tests to use nicer in/out for test tables like form_tests.
+    * mmm ok...
+
+## Fork
+This project is a fork of [absoludity/goforms](https://github.com/absoludity/goforms) by absoludity.
 
 ## License
-Copyright 2012 The GoForms Authors. All rights reserved.
-Use of this source code is governed by a BSD-style
-license that can be found in the LICENSE file.
+Copyright 2012 The GoForms Authors. All rights reserved.<br>
+2014 MartinBrugnara
+Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
