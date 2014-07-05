@@ -70,7 +70,7 @@ var FormTestCases = FormTestData{
 			"name": "This field is required.",
 		},
 	},
-	// Empty data for a field does not error (age).
+	// Empty data for a field does not error (age). [Required False]
 	// (Not sure if this is possible, but test anyway.)
 	{
 		url.Values{
@@ -81,6 +81,30 @@ var FormTestCases = FormTestData{
 			"name": "Alpha Beta",
 		},
 		nil,
+	},
+	// Test empty data on required fields.
+	{
+		url.Values{
+			"name":   {},
+			"age":    {"24"},
+			"ignore": {"ignore me"},
+		},
+		nil,
+		TestErrorData{
+			"name": "This field is required.",
+		},
+	},
+	// Test error on multiple values.
+	{
+		url.Values{
+			"name":   {"Ciccio", "Barocco"},
+			"age":    {"24"},
+			"ignore": {"ignore me"},
+		},
+		nil,
+		TestErrorData{
+			"name": "Too many values for this field.",
+		},
 	},
 }
 
