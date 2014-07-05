@@ -97,5 +97,5 @@ This project is a fork of [absoludity/goforms](https://github.com/absoludity/gof
 
 ## License
 Copyright 2012 The GoForms Authors. All rights reserved.<br>
-2014 MartinBrugnara
+2014 MartinBrugnara.<br>
 Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
