@@ -49,7 +49,7 @@ For another form-data processing library, see github.com/gorilla/schema, which f
 package forms
 
 import (
-	"github.com/MartinBrugnara/goforms/fields"
+	"github.com/absoludity/goforms/fields"
 	"net/url"
 )
 
