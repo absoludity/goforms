@@ -81,7 +81,7 @@ Using the [http.Request](http://golang.org/pkg/net/http/#Request) objects Form (
 ## TODO
  * Remove Form.Data, and instead provide data to Form.IsValid()
  * Perhaps make Form.CleanedData and Form.Errors private, providing getters.
- * Add defaults to fields so that a value is always included, or even remove Required, assuming that a field is required if there's no default?.
+ * Add defaults to fields so that a value is always included.
  * Enable custom error messages.
  * Update field tests to use nicer in/out for test tables like form_tests.
 

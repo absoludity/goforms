@@ -1,7 +1,9 @@
 // Copyright 2012 The GoForms Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
+//
+// Extended by MartinBrugnara (2014) <martin@martin-dev.eu>
+//
 /*
 Package goforms/forms enables form data validation, cleaning and error collection, similar to Django forms. From forms_test.go:
 
@@ -76,28 +78,45 @@ func (f *Form) IsValid() bool {
 	errors := map[string]string{}
 
 	for fieldName, field := range f.Fields {
-		dataValues, fieldHasData := f.Data[fieldName]
-		dataValue := ""
-		switch fieldHasData {
-		case true:
-			if len(dataValues) == 0 {
-				continue
-			} else {
-				dataValue = dataValues[0]
+		values, exists := f.Data[fieldName]
+		if exists {
+			vsCount := len(values)
+			switch vsCount {
+			case 0:
+				// We have got the entry, but no values
+				exists = false
+			case 1:
+				// We have got one value, perfect!
+				if cleaned, err := field.Clean(values[0]); err == nil {
+					cleanedData[fieldName] = cleaned
+				} else {
+					errors[fieldName] = err.Error()
+					isValid = false
+				}
+
+			default: // > 1
+				// Mmm... Should this be an array ?
+				if field.IsArray() {
+					if cleaned, err := field.CleanArray(values); err == nil {
+						cleanedData[fieldName] = cleaned
+					} else {
+						errors[fieldName] = err.Error()
+						isValid = false
+					}
+				} else {
+					errors[fieldName] = "Too many values for this field."
+					isValid = false
+				}
 			}
-		case false:
+		}
+
+		// do not else: here we handle the case len(values)==0 too
+		if !exists {
 			if field.IsRequired() {
 				errors[fieldName] = "This field is required."
 				isValid = false
 			}
 			continue
-		}
-		cleanedValue, err := field.Clean(dataValue)
-		if err == nil {
-			cleanedData[fieldName] = cleanedValue
-		} else {
-			errors[fieldName] = err.Error()
-			isValid = false
 		}
 	}
 
