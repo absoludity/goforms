@@ -19,7 +19,7 @@ func MakeForm(data string) Form {
 		}),
 	}
 	personForm := Form{Fields: formFields}
-    personForm.Data, _ = url.ParseQuery(data)
+	personForm.Data, _ = url.ParseQuery(data)
 
 	return personForm
 }
@@ -44,7 +44,7 @@ var FormTestCases = FormTestData{
 	},
 	// Invalid data results in collected errors (age, about).
 	{
-		
+
 		"name=Alpha+Beta&age=This+is+not+a+number&about=This+is+too+long.&ignore=ignore+me",
 		nil,
 		TestErrorData{
@@ -63,7 +63,7 @@ var FormTestCases = FormTestData{
 	// Empty data for a field does not error (age). [Required False]
 	// (Not sure if this is possible, but test anyway.)
 	{
-        "name=Alpha+Beta&age=",
+		"name=Alpha+Beta&age=",
 		CleanedData{
 			"name": "Alpha Beta",
 		},
@@ -71,7 +71,7 @@ var FormTestCases = FormTestData{
 	},
 	// Test empty data on required fields.
 	{
-        "name=&age=24&ignore=ignore+me",
+		"name=&age=24&ignore=ignore+me",
 		nil,
 		TestErrorData{
 			"name": "This field is required.",
@@ -79,7 +79,7 @@ var FormTestCases = FormTestData{
 	},
 	// Test error on multiple values.
 	{
-        "name=Ciccio&age=24&ignore=ignore+me&name=Barocco",
+		"name=Ciccio&age=24&ignore=ignore+me&name=Barocco",
 		nil,
 		TestErrorData{
 			"name": "Too many values for this field.",

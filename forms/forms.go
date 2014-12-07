@@ -87,13 +87,13 @@ func (f *Form) IsValid() bool {
 				exists = false
 			case 1:
 				// We have got one value, perfect!
-                // not so perfect since empty value is counted as a value too.
-                // Check if the value is an empty string again
-                // not trimmed on purpose, this should be documented
-                if values[0] == "" {
-                    exists = false
-                    break
-                }
+				// not so perfect since empty value is counted as a value too.
+				// Check if the value is an empty string again
+				// not trimmed on purpose, this should be documented
+				if values[0] == "" {
+					exists = false
+					break
+				}
 				if cleaned, err := field.Clean(values[0]); err == nil {
 					cleanedData[fieldName] = cleaned
 				} else {
