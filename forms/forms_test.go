@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func MakeForm(data url.Values) Form {
+func MakeForm(data string) Form {
 	formFields := FormFields{
 		"name": fields.NewCharField(fields.Defaults{
 			"Required": true,
@@ -19,7 +19,7 @@ func MakeForm(data url.Values) Form {
 		}),
 	}
 	personForm := Form{Fields: formFields}
-	personForm.Data = data
+    personForm.Data, _ = url.ParseQuery(data)
 
 	return personForm
 }
@@ -27,7 +27,7 @@ func MakeForm(data url.Values) Form {
 type TestErrorData map[string]string
 
 type FormTestData []struct {
-	in  url.Values
+	in  string
 	out CleanedData
 	err TestErrorData
 }
@@ -35,11 +35,7 @@ type FormTestData []struct {
 var FormTestCases = FormTestData{
 	// Values are cleaned (name, age) and extra data is ignored (ignore).
 	{
-		url.Values{
-			"name":   {"Alpha Beta"},
-			"age":    {"24"},
-			"ignore": {"ignore me"},
-		},
+		"name=Alpha+Beta&age=24&ignore=ignore+me",
 		CleanedData{
 			"name": "Alpha Beta",
 			"age":  24,
@@ -48,12 +44,8 @@ var FormTestCases = FormTestData{
 	},
 	// Invalid data results in collected errors (age, about).
 	{
-		url.Values{
-			"name":   {"Alpha Beta"},
-			"age":    {"This is not a number"},
-			"about":  {"This is too long."},
-			"ignore": {"ignore me"},
-		},
+		
+		"name=Alpha+Beta&age=This+is+not+a+number&about=This+is+too+long.&ignore=ignore+me",
 		nil,
 		TestErrorData{
 			"about": "The value must have a maximum length of 10 characters.",
@@ -62,9 +54,7 @@ var FormTestCases = FormTestData{
 	},
 	// A lack of data for a required field is an error (name).
 	{
-		url.Values{
-			"about": {"I like Go"},
-		},
+		"about=I+like+Go",
 		nil,
 		TestErrorData{
 			"name": "This field is required.",
@@ -73,10 +63,7 @@ var FormTestCases = FormTestData{
 	// Empty data for a field does not error (age). [Required False]
 	// (Not sure if this is possible, but test anyway.)
 	{
-		url.Values{
-			"name": {"Alpha Beta"},
-			"age":  {},
-		},
+        "name=Alpha+Beta&age=",
 		CleanedData{
 			"name": "Alpha Beta",
 		},
@@ -84,11 +71,7 @@ var FormTestCases = FormTestData{
 	},
 	// Test empty data on required fields.
 	{
-		url.Values{
-			"name":   {},
-			"age":    {"24"},
-			"ignore": {"ignore me"},
-		},
+        "name=&age=24&ignore=ignore+me",
 		nil,
 		TestErrorData{
 			"name": "This field is required.",
@@ -96,11 +79,7 @@ var FormTestCases = FormTestData{
 	},
 	// Test error on multiple values.
 	{
-		url.Values{
-			"name":   {"Ciccio", "Barocco"},
-			"age":    {"24"},
-			"ignore": {"ignore me"},
-		},
+        "name=Ciccio&age=24&ignore=ignore+me&name=Barocco",
 		nil,
 		TestErrorData{
 			"name": "Too many values for this field.",
